@@ -1,6 +1,9 @@
 import customer
 import account
 class Bank:
+    all_accounts= []
+    all_customers = []
+
     def __init__(self):
         self.bank_name = "FiliBank"
         self.customers = []
@@ -16,7 +19,25 @@ class Bank:
 
     def _load(self):
         #Läser in text filen och befolkar listan som ska innehålla kunderna.
-        print()
+        for line in open("Customer_database.txt").readlines():
+            consumer = line.strip().split(':')
+
+            for x in self.customers:
+
+                if consumer[3] != x.pnr:
+
+                    if int(consumer[0]) != int(x.id):
+                        client = customer.Customer(consumer[1], consumer[2], consumer[3], consumer[0])
+                        self.customers.append(client)
+                        break
+                    else:
+                        client = customer.Customer(consumer[1], consumer[2], consumer[3])
+                        self.customers.append(client)
+                        break
+                else:
+                    return "They are already our client."
+                    break
+        return self.customers
 
     def add_customers(self, fname, lname, pnr):
         """Skapar en ny kund med namn och personnummer. Kunden skapas endast om det inte
@@ -26,7 +47,7 @@ class Bank:
         self.lname = lname
         self.pnr = pnr
 
-        prospect = customer.Customer(fname , lname, pnr)
+        prospect = customer.Customer(fname, lname, pnr)
         duplicate_pnr =False
         if self.customers == []:
             self.customers.append(prospect)
@@ -39,8 +60,7 @@ class Bank:
                 else:
                     duplicate_pnr =True
                     return f"This social security number already exists, are you trying to commmit fraud {fname}?"
-
-
+        return duplicate_pnr
 
 
     def get_customer_with_pnr(self, pnr):
@@ -48,7 +68,7 @@ class Bank:
             if i.pnr == pnr:
                 print(f",Customer found! Name:{i.fname} {i.lname} social security number:{i.pnr}")
             else:
-                print("customer does not yet exist or you erote the wrong social security number")
+                print("customer does not yet exist or you wrote the wrong social security number")
 
     def change_customer_name(self, fname, lname, pnr):
         #Byter namn på kund, returnerar True om namnet ändrades annars returnerar det False (om kunden inte fanns).
@@ -65,18 +85,67 @@ class Bank:
         resultatet returneras. Listan som returneras ska innehålla information om alla konton sotogs bort, saldot som kunden får tillbaka.
         """
 
+
     def add_account(self, pnr):
        """ Skapar ett konto till kunden med personnumret som angetts, returnerar kontonumret som det skapade
         kontot fick alternativt returneras –1 om inget konto skapades."""
 
-    def get_account(self, pnr, account_id):
-        """returnerar textuell info av kontot med konto nummer som tillhör kunden (kontonummer, saldo och kontotyp)"""
+       temp = []
+       for x in self.all_customers:
+           if x.pnr == pnr:
+               for y in self.all_accounts:
+                   if y.customer_id == x.id:
+                       temp.append(y)
 
-    def deposit(self, pnr, account_id, amount):
+    def get_account(self, pnr, account_nr):
+        """returnerar textuell info av kontot med konto nummer som tillhör kunden (kontonummer, saldo och kontotyp)"""
+        for x in self.all_customers:
+            if x.ssn == pnr:
+                for y in self.all_accounts:
+                    if y.account_nr == account_nr:
+                        return y
+
+    def deposit(self, pnr, account_nr, money):
         """gör insättning på kontot returnerar true om det gick annars false"""
 
-    def withdraw(self, pnr, account_id, amount):
-        """gör uttag på kontot returnerar true om det gick bra annars false"""
+        empty_list = []
+        for x in self.all_customers:
+            if x.pnr == pnr:
+                for z in self.all_accounts:
+                    if z.account_nr == account_nr:
+                        empty_list.append(z)
+                        for y in empty_list:
+                            if z.account_nr == account_nr:
+                                z.balance += money
+                                return True
+                            else:
+                                return False
 
-    def close_account(self, pnr, account_id):
+
+
+    def withdraw(self, pnr, account_nr, money):
+        """gör uttag på kontot returnerar true om det gick bra annars false"""
+        for x in self.all_customers:
+            if x.pnr == pnr:
+                for y in self.all_accounts:
+                    if y.account_nr == account_nr:
+                        if y.balance >= money:
+                            y.balance -= money
+                            return True
+                        else:
+                            return False
+
+
+    def close_account(self, pnr, account_nr):
         """avslutar konto, textuell info presenteras av konto o saldo genereras och returneras"""
+
+        for x in self.customers:
+            if x.pnr == pnr:
+                for y in x.accounts:
+                    if y.account_number == account_nr:
+                        x.close_account(account_nr)
+                        return f"Account {account_nr} has been closed, you will be reimbursed {y.balance}$"
+                    else:
+                        return f"Account {account_nr} is not in our system"
+            else:
+                return f"Customer with the social security number {pnr} does not exist in our database."

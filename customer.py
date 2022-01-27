@@ -1,15 +1,21 @@
 import account
+import itertools
 
 class Customer:
+    id =itertools.count()
 
     # transactions can be added later
     #fname stands for first name and lname stands for last name
-    def __init__(self, id:int, fname:str, lname:str, pnr:str):
-        self.id = id
+    def __init__(self, fname:str, lname:str, pnr:str , id:int = None ):
         self.fname = fname #str
         self.lname = lname #str
         self.pnr = pnr #str
         self.accounts = []
+        if id:
+            self.id = id
+        else:
+            self.id = next(self.id)
+            self.id = 1000 + self.id
 
     def show_customer(self):
         return f"Here's our loyal customer of Filibank {self.fname} {self.lname} with social security number {self.pnr} has the customer id of {self.id}"
@@ -42,7 +48,3 @@ class Customer:
 
 
 
-x = Customer(1, "sda","sad", 1999238282)
-
-
-print(x.show_customer())

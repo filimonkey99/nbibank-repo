@@ -51,7 +51,7 @@ class Bank:
         duplicate_pnr =False
         if self.customers == []:
             self.customers.append(prospect)
-            print(f"Welcome to Filibank {prospect.fname} \n Here is your customer info, \n Name; {fname} {lname} Social security number: {pnr}")
+            print(f"Welcome to Filibank {prospect.fname} \n Here is your customer info, \n Name: {fname} {lname} Social security number: {pnr}")
         else:
             for p in self.customers:
                 if p.pnr != prospect.pnr:
@@ -84,7 +84,20 @@ class Bank:
        """ Tar bort kund med personnumret som angetts ur banken, alla kundens eventuella konton tas också bort och
         resultatet returneras. Listan som returneras ska innehålla information om alla konton sotogs bort, saldot som kunden får tillbaka.
         """
+       return_balance = 0
+       customer = []
+       all_accounts = []
+       for x in self.customers:
+           if x.pnr == pnr:
+               customer = self.customers.index(x)
+               self.customers.pop(customer)
 
+               for y in x.accounts:
+                   return_balance = y.balance
+               return f"Customer {x.fname} {x.lname} is deleted\n" \
+                      f"Return balance: {return_balance}"
+           else:
+               f"Customer with personal number: {pnr} not found!"
 
     def add_account(self, pnr):
        """ Skapar ett konto till kunden med personnumret som angetts, returnerar kontonumret som det skapade
@@ -142,7 +155,7 @@ class Bank:
         for x in self.customers:
             if x.pnr == pnr:
                 for y in x.accounts:
-                    if y.account_number == account_nr:
+                    if y.account_nr == account_nr:
                         x.close_account(account_nr)
                         return f"Account {account_nr} has been closed, you will be reimbursed {y.balance}$"
                     else:

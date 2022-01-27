@@ -1,4 +1,8 @@
-import customer
+from menu import *
+from customer import Customer
+from bank import Bank
+from account import Account
 import account
-import bank
 
+b= Bank()
+start_menu()

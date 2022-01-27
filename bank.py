@@ -35,7 +35,7 @@ class Bank:
                         self.customers.append(client)
                         break
                 else:
-                    return "They are already our client."
+                    print( "They are already our client.")
                     break
         return self.customers
 

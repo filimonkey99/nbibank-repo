@@ -1,9 +1,6 @@
-import bank
 from bank import Bank
 
 filibank = Bank()
-bank.Bank()
-
 def start_menu():
     print("Hi there, what would you like to do? \n"
           "1. Become a client at filibank \n"

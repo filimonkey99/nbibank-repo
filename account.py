@@ -3,7 +3,7 @@
 class Account:
 
 
-    def __init__(self, account_nr:int):
+    def __init__(self, account_nr):
         self.balance = 0
         self.account_type = "debit acocunt"
         self.account_nr = account_nr
